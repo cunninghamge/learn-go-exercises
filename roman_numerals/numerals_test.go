@@ -2,8 +2,8 @@ package main
 
 import "testing"
 
-func TestRomanNumerals(t *testing.T) {
-	cases := []struct {
+var (
+	cases = []struct {
 		arabic int
 		roman  string
 	}{
@@ -39,11 +39,22 @@ func TestRomanNumerals(t *testing.T) {
 		{2021, "MMXXI"},
 		{3999, "MMMCMXCIX"},
 	}
+)
 
+func TestRomanNumerals(t *testing.T) {
 	for _, test := range cases {
 		got := ConvertToRoman(test.arabic)
 		if got != test.roman {
 			t.Errorf("got %q, want %q", got, test.roman)
+		}
+	}
+}
+
+func TestArabic(t *testing.T) {
+	for _, test := range cases {
+		got := ConvertToArabic(test.roman)
+		if got != test.arabic {
+			t.Errorf("got %d, want %d", got, test.arabic)
 		}
 	}
 }
