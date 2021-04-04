@@ -1,10 +1,14 @@
 package main
 
-import "testing"
+import (
+	"log"
+	"testing"
+	"testing/quick"
+)
 
 var (
 	cases = []struct {
-		arabic int
+		arabic uint16
 		roman  string
 	}{
 		{1, "I"},
@@ -56,5 +60,23 @@ func TestArabic(t *testing.T) {
 		if got != test.arabic {
 			t.Errorf("got %d, want %d", got, test.arabic)
 		}
+	}
+}
+
+func TestPropertiesOfConversion(t *testing.T) {
+	assertion := func(arabic uint16) bool {
+		if arabic > 3999 {
+			log.Println(arabic)
+			return true
+		}
+		roman := ConvertToRoman(arabic)
+		fromRoman := ConvertToArabic(roman)
+		return fromRoman == arabic
+	}
+
+	if err := quick.Check(assertion, &quick.Config{
+		MaxCount: 1000,
+	}); err != nil {
+		t.Error("failed checks", err)
 	}
 }
